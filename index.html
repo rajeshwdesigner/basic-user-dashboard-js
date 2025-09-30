@@ -1,0 +1,164 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Users - Project</title>
+</head>
+<body>
+
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            font-size: 14px;
+        }
+        .data-table {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .data-table > div {
+            width: 47%;
+            box-shadow: 0px 0px 3px rgba(0,0,0,0.3);
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 10px;
+        }
+        .data-table h2,
+        .data-table p {
+            margin: 0;
+            padding: 0 0 10px 0;
+        }
+        .data-table h2 {
+            padding: 0 0 5px 0;
+        }
+        .data-table ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .data-table ul li {
+            line-height: 23px;
+        }
+        .data-table ul li span {
+            padding: 0 10px 0 0;
+            color: blue;
+        }
+        .data-table ul li:nth-child(2) span {
+            color: green;
+        }
+        .data-table ul li:nth-child(3) span {
+            color: blueviolet;
+        }
+        .data-table ul li:nth-child(4) span {
+            color: red;
+        }
+        .data-table__input {
+            width: 100%;
+            display: flex;
+        }
+        .data-table__input input {
+            padding: 15px 15px 15px 30px;
+            width: 100%;
+            height: 40px;
+            margin: 10px;
+            box-sizing: border-box;
+            border: 1px solid #c5c5c5;
+            border-radius: 3px;
+        }
+        .icon-search {
+            background: url("https://static.thenounproject.com/png/101791-200.png") no-repeat left;
+            background-size: 20px;
+        }
+    </style>
+    
+    <div class="data-table__input">
+        <input type="search" placeholder="Search Users" id="filterUsers" class="icon-search" oninput="filterUserData(document.getElementById('filterUsers').value)">
+    </div>
+    <div id="usersData" class="data-table"></div>
+
+    <!-- (These are the recommended ways to evenListener for a input filter)
+    Use oninput → if you want the actual value while the user is typing. *RECOMMENDED!
+    Use onchange → if you only need the value after they finish typing.
+    Use onkeydown → if you care about the specific keys pressed, not just the value.
+    -->
+
+    <script>
+        let users = [];
+        fetch("https://jsonplaceholder.typicode.com/users")
+        .then((response) => response.json())
+            .then(responds => {
+            // use the data
+                console.log(responds);
+                users = responds;
+                users.forEach( (val,idx,all)=>{
+                    document.getElementById("usersData").innerHTML = document.getElementById("usersData").innerHTML + `<div>
+                    <div><h2>${val.name}</h2></div>
+                    <div><p>${val.username}</p></div>
+                        <ul>
+                            <li><span class="fa fa-envelope"></span>${val.email}</li>
+                            <li><span class="fa fa-phone"></span>${val.phone}</li>
+                            <li><span class="fa fa-globe"></span>${val.website}</li>
+                            <li><span class="fa fa-map-pin"></span>${val.address.city + ", " + val.address.zipcode}</li>
+                        </ul>
+                    </div>`;
+                });
+
+                /*users.forEach((val,idx,all) => {
+                    console.log(document.getElementById("usersData").innerHTML);
+                    document.getElementById("usersData").innerHTML += `<div>${val.name}</div>`
+                });*/
+            })
+            .catch(error => {
+            // handle errors
+            console.log(error);
+            });
+
+            /*const word = "hello";
+            const regex = new RegExp(word, "i"); // "i" = case insensitive
+            console.log(regex.test("Hello world")); // true
+            */
+
+            function filterUserData(inputValue){
+                console.log(inputValue);
+                let filteredUser = users.filter((value,idx,all) => {
+                    if(new RegExp("^" + inputValue, "i").test(value.name)) {
+                        return true 
+                    } else {
+                        return false
+                    }
+                });
+                document.getElementById("usersData").innerHTML = "";
+
+                filteredUser.forEach( (val,idx,all)=>{
+                    document.getElementById("usersData").innerHTML = document.getElementById("usersData").innerHTML + `<div>
+                    <div><h2>${val.name}</h2></div>
+                    <div><p>${val.username}</p></div>
+                        <ul>
+                            <li><span class="fa fa-envelope"></span>${val.email}</li>
+                            <li><span class="fa fa-phone"></span>${val.phone}</li>
+                            <li><span class="fa fa-globe"></span>${val.website}</li>
+                            <li><span class="fa fa-map-pin"></span>${val.address.city + ", " + val.address.zipcode}</li>
+                        </ul>
+                    </div>`;
+                });
+            }
+
+            /*document.getElementById("filterUsers").addEventListener("input", function () {
+                handleTyping(this.value);
+            });*/
+
+        /*document.getElementById("usersData").innerHTML = "<div>User1</div>";
+        ["User2", "User3", "User4", "User5", "User6", "User7", "User8", "User9", "User10"].forEach( (val,idx,all)=>{
+            document.getElementById("usersData").innerHTML = document.getElementById("usersData").innerHTML + `<div>${val}</div>`;
+        });*/
+        
+        //document.getElementById("usersData").innerHTML = document.getElementById("usersData").innerHTML + "<div>User2</div>";
+        //document.getElementById("usersData").innerHTML = document.getElementById("usersData").innerHTML + "<div>User3</div>";
+         
+        
+        
+    </script>
+    
+</body>
+</html>
